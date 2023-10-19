@@ -36,6 +36,10 @@ require('./config/passport')();
 const authRoutes = require('./routes/authRoutes');
 app.use('/auth', authRoutes);
 
+// Include your routes
+const patientRoutes = require('./routes/patientRoutes');
+app.use('/patient', patientRoutes);
+
 //define port number
 const port = process.env.PORT || 3000;
 const host = '127.0.0.1';

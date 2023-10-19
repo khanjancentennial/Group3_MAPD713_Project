@@ -1,0 +1,40 @@
+{
+    "name": "John Doe",
+    "dateOfBirth": "1990-01-15",
+    "gender": "Male",
+    "address": "123 Main St",
+    "primaryPhone": "123-456-7890",
+    "emergencyContact": {
+      "name": "Jane Doe",
+      "relationship": "Spouse",
+      "phone": "987-654-3210"
+    },
+    "email": "john@example.com",
+    "insurance": {
+      "provider": "XYZ Insurance",
+      "policyNumber": "P12345",
+      "groupNumber": "G6789"
+    },
+    "medicalHistory": {
+      "previousConditions": ["Hypertension"],
+      "currentMedications": ["Aspirin"],
+      "allergies": ["Penicillin"]
+    },
+    "personalInformation": {
+      "maritalStatus": "Married",
+      "occupation": "Engineer"
+    },
+    "familyHistory": {
+      "conditions": ["Heart Disease"]
+    },
+    "legalInformation": {
+      "consentToTreatment": true,
+      "organDonationConsent": false
+    },
+    "additionalDetails": {
+      "primaryCarePhysician": "Dr. Smith",
+      "preferredPharmacy": "MediMart",
+      "dietaryRestrictions": "None"
+    }
+  }
+  
