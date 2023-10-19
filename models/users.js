@@ -20,6 +20,14 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  gender: {
+    type: Number, // 0 for male, 1 for female
+    default: 0, // Set a default value (e.g., male)
+  },
+  healthcareProvider: {
+    type: Number, // 0 for male, 1 for female
+    default: 0, // Set a default value (e.g., male)
+  },
   salt: {
     type: String,
     select: false

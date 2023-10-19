@@ -25,9 +25,9 @@ module.exports = {
       return res.status(400).json({ success: false, message: 'Content-Type header must be application/json.' });
     }
 
-    const { firstName, lastName, email, phoneNumber, password } = req.body;
+    const { firstName, lastName, email, phoneNumber, password,gender,healthcareProvider } = req.body;
 
-    if (!firstName || !lastName || !email || !phoneNumber || !password) {
+    if (!firstName || !lastName || !email || !phoneNumber || !password || gender === undefined || healthcareProvider === undefined) {
       return res.status(400).json({ success: false, message: 'Please provide all required fields.' });
     }
 
@@ -48,6 +48,8 @@ module.exports = {
         lastName,
         email,
         phoneNumber,
+        gender,
+        healthcareProvider,
         salt,
         hash,
       });
@@ -60,7 +62,7 @@ module.exports = {
     }
   },
 
-  // login user and check all conditions
+  // login user and check all the conditions
   login: async (req, res) => {
     passport.authenticate('local-login', { session: false }, async (err, user, info) => {
       if (err || !user) {
