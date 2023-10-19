@@ -82,3 +82,19 @@ exports.getPatientById = async (req, res) => {
       res.status(500).json({ success: false, message: 'Error retrieving patient details.' });
     }
   };
+
+  // Function to get patient details by email
+exports.getPatientByEmail = async (req, res) => {
+  try {
+    const patient = await Patient.find({ email: req.params.patientEmail });
+
+    if (!patient || patient.length === 0) {
+      return res.status(404).json({ success: false, message: 'Patient not found.' });
+    }
+
+    // Send the patient details in the response
+    res.status(200).json({ success: true, data: patient });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Error retrieving patient details.' });
+  }
+};
