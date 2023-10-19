@@ -10,5 +10,7 @@ router.get('/view/:patientId', PatientController.getPatientById);
 router.get('/viewByName/:patientName', PatientController.getPatientByName);
 // Get patient details by email
 router.get('/viewByEmail/:patientEmail', PatientController.getPatientByEmail);
+// Get a list of all patients
+router.get('/list', PatientController.getAllPatients);
 
 module.exports = router;
