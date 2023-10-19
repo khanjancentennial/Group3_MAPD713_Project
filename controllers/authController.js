@@ -5,6 +5,8 @@ const config = require('../config/db');
 const secret = require('../config/secret')
 const bcrypt = require('bcrypt');
 
+// create token after login
+
 const createToken = (user) => {
   const payload = {
     _id: user._id,
@@ -14,6 +16,8 @@ const createToken = (user) => {
   };
   return jwt.sign(payload, secret.secret);
 };
+
+// register new user and check all conditions
 
 module.exports = {
   register: async (req, res) => {
@@ -56,6 +60,7 @@ module.exports = {
     }
   },
 
+  // login user and check all conditions
   login: async (req, res) => {
     passport.authenticate('local-login', { session: false }, async (err, user, info) => {
       if (err || !user) {

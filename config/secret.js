@@ -1,3 +1,5 @@
+// generate unique secret key 
+
 const crypto = require('crypto');
 
 // Generate a random secret key
