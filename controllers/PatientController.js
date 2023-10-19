@@ -51,3 +51,34 @@ exports.addPatient = async (req, res) => {
     res.status(500).json({ success: false, message: 'Error adding patient.' });
   }
 };
+// Function to get patient details by ID
+exports.getPatientById = async (req, res) => {
+    try {
+      const patient = await Patient.findById(req.params.patientId);
+  
+      if (!patient) {
+        return res.status(404).json({ success: false, message: 'Patient not found.' });
+      }
+  
+      // Send the patient details in the response
+      res.status(200).json({ success: true, data: patient });
+    } catch (err) {
+      res.status(500).json({ success: false, message: 'Error retrieving patient details.' });
+    }
+  };
+  
+  // Function to get patient details by name
+  exports.getPatientByName = async (req, res) => {
+    try {
+      const patient = await Patient.find({ name: req.params.patientName });
+  
+      if (!patient || patient.length === 0) {
+        return res.status(404).json({ success: false, message: 'Patient not found.' });
+      }
+  
+      // Send the patient details in the response
+      res.status(200).json({ success: true, data: patient });
+    } catch (err) {
+      res.status(500).json({ success: false, message: 'Error retrieving patient details.' });
+    }
+  };
