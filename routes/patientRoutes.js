@@ -13,10 +13,12 @@ router.get('/viewByEmail/:patientEmail', PatientController.getPatientByEmail);
 router.get('/list', PatientController.getAllPatients);
 
 // Delete patient by name
-router.delete('/deleteByName/:patientName', PatientController.deletePatientByName);
+// router.delete('/deleteByName/:patientName', PatientController.deletePatientByName);
+// Delete patient by id
+router.delete('/delete/:patientId', PatientController.deleteById);
 // Delete patient by email
-router.delete('/deleteByEmail/:patientEmail', PatientController.deletePatientByEmail);
+// router.delete('/deleteByEmail/:patientEmail', PatientController.deletePatientByEmail);
 // Delete all patients
-router.delete('/deleteAll', PatientController.deleteAllPatients);
+// router.delete('/deleteAll', PatientController.deleteAllPatients);
 
 module.exports = router;

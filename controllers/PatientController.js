@@ -89,17 +89,32 @@ exports.getAllPatients = async (req, res) => {
 };
 
 // Function to delete a patient by name
-exports.deletePatientByName = async (req, res) => {
+// exports.deletePatientByName = async (req, res) => {
+//   try {
+//     const patient = await Patient.findOneAndRemove({ firstName: req.params.patientName });
+
+//     if (!patient) {
+//       return res.status(404).json({ success: false, message: 'Patient not found.' });
+//     }
+
+//     res.status(200).json({ success: true, message: 'Patient deleted successfully.' });
+//   } catch (err) {
+//     res.status(500).json({ success: false, message: 'Error deleting patient.' });
+//   }
+// };
+
+// Function to delete a patient by ID
+exports.deleteById = async (req, res) => {
   try {
-    const patient = await Patient.findOneAndRemove({ firstName: req.params.patientName });
-
-    if (!patient) {
-      return res.status(404).json({ success: false, message: 'Patient not found.' });
-    }
-
-    res.status(200).json({ success: true, message: 'Patient deleted successfully.' });
+      const patient = await Patient.findByIdAndRemove(req.params.patientId);
+      
+      if (!patient) {
+          return res.status(404).json({ success: false, message: 'Patient not found.' });
+      }
+      
+      res.status(200).json({ success: true, message: 'Patient deleted successfully.' });
   } catch (err) {
-    res.status(500).json({ success: false, message: 'Error deleting patient.' });
+      res.status(500).json({ success: false, message: 'Error deleting patient.' });
   }
 };
 
@@ -119,12 +134,12 @@ exports.deletePatientByEmail = async (req, res) => {
 };
 
 // Function to delete all patients
-exports.deleteAllPatients = async (req, res) => {
-  try {
-    await Patient.deleteMany({}); // Delete all patient documents
+// exports.deleteAllPatients = async (req, res) => {
+//   try {
+//     await Patient.deleteMany({}); // Delete all patient documents
 
-    res.status(200).json({ success: true, message: 'All patients deleted successfully.' });
-  } catch (err) {
-    res.status(500).json({ success: false, message: 'Error deleting all patients.' });
-  }
-};
+//     res.status(200).json({ success: true, message: 'All patients deleted successfully.' });
+//   } catch (err) {
+//     res.status(500).json({ success: false, message: 'Error deleting all patients.' });
+//   }
+// };
