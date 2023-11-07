@@ -9,6 +9,7 @@ const patientSchema = new Schema({
   weight: String,
   height: String,
   address: String,
+  gender: Number,
   // Additional patient information fields
 });
 

@@ -13,10 +13,11 @@ exports.addPatient = async (req, res) => {
     phoneNumber,
     weight,
     height,
-    address
+    address,
+    gender
   } = req.body;
 
-  if (!firstName || !lastName || !email || !phoneNumber || !weight || !height || !address) {
+  if (!firstName || !lastName || !email || !phoneNumber || !weight || !height || !address || gender === undefined ) {
     return res.status(400).json({ success: false, message: 'Please provide all required patient details.' });
   }
 
@@ -29,7 +30,8 @@ exports.addPatient = async (req, res) => {
       phoneNumber,
       weight,
       height,
-      address
+      address,
+      gender
     });
 
     await newPatient.save();
