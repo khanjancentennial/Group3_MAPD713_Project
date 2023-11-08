@@ -40,6 +40,9 @@ app.use('/auth', authRoutes);
 const patientRoutes = require('./routes/patientRoutes');
 app.use('/patient', patientRoutes);
 
+const clinicalTestsRoutes = require('./routes/clinicalTests');
+app.use('/clinicalTest', clinicalTestsRoutes);
+
 //define port number
 const port = process.env.PORT || 3000;
 const host = '127.0.0.1';
