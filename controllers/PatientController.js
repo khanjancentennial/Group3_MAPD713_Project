@@ -1,4 +1,6 @@
 const Patient = require('../models/patient');
+const ClinicalTest = require('../models/clinicalTest');
+
 
 // Function to create a new patient
 exports.addPatient = async (req, res) => {
@@ -124,16 +126,36 @@ exports.getAllPatients = async (req, res) => {
 
 // Function to delete a patient by ID
 exports.deleteById = async (req, res) => {
+  // try {
+  //     const patient = await Patient.findByIdAndRemove(req.params.patientId);
+      
+  //     if (!patient) {
+  //         return res.status(404).json({ success: false, message: 'Patient not found.' });
+  //     }
+      
+  //     res.status(200).json({ success: true, message: 'Patient deleted successfully.' });
+  // } catch (err) {
+  //     res.status(500).json({ success: false, message: 'Error deleting patient.' });
+  // }
   try {
-      const patient = await Patient.findByIdAndRemove(req.params.patientId);
-      
-      if (!patient) {
-          return res.status(404).json({ success: false, message: 'Patient not found.' });
-      }
-      
-      res.status(200).json({ success: true, message: 'Patient deleted successfully.' });
+    const patientId = req.params.patientId;
+
+    // Find and remove all clinical tests associated with the patient
+    const clinicalTests = await ClinicalTest.find({ 'patient._id': patientId });
+    for (const clinicalTest of clinicalTests) {
+      await ClinicalTest.findByIdAndRemove(clinicalTest._id);
+    }
+
+    // Now, remove the patient
+    const patient = await Patient.findByIdAndRemove(patientId);
+
+    if (!patient) {
+      return res.status(404).json({ success: false, message: 'Patient not found.' });
+    }
+
+    res.status(200).json({ success: true, message: 'Patient and related clinical tests deleted successfully.' });
   } catch (err) {
-      res.status(500).json({ success: false, message: 'Error deleting patient.' });
+    res.status(500).json({ success: false, message: 'Error deleting patient and related clinical tests.' });
   }
 };
 

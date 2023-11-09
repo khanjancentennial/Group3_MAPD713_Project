@@ -210,11 +210,21 @@ exports.searchClinicalTestsByName = async (req, res) => {
         {
           $replaceRoot: { newRoot: '$latestTest' }, // Replace the root document with the latest test
         },
+       
       ];
   
       const criticalPatients = await ClinicalTest.aggregate(aggregationPipeline);
-  
-      res.status(200).json({ success: true, data: criticalPatients });
+      const filteredCriticalPatients = criticalPatients
+      .filter(patient => patient.bloodPressure > 140&&
+        patient.respiratoryRate > 30 && patient.bloodOxygenLevel > 90 && patient.heartbeatRate > 100);
+
+    console.log('Filtered Critical Patients:');
+    filteredCriticalPatients.forEach(patient => {
+      console.log(patient);
+    });
+
+    res.status(200).json({ success: true, data: filteredCriticalPatients });
+    
     } catch (error) {
       res.status(500).json({ success: false, message: 'Error retrieving and sorting the collection.' });
       console.error(error);
