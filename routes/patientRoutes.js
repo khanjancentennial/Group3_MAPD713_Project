@@ -23,4 +23,6 @@ router.delete('/delete/:patientId', PatientController.deleteById);
 // Delete all patients
 // router.delete('/deleteAll', PatientController.deleteAllPatients);
 
+router.put('/patients/:patientId', PatientController.editPatientById);
+
 module.exports = router;

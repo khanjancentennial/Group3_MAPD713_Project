@@ -184,3 +184,39 @@ exports.deletePatientByEmail = async (req, res) => {
 //     res.status(500).json({ success: false, message: 'Error deleting all patients.' });
 //   }
 // };
+
+// Function to edit patient details by ID
+exports.editPatientById = async (req, res) => {
+  // Check the Content-Type header
+  if (req.get('Content-Type') !== 'application/json') {
+    return res.status(400).json({ success: false, message: 'Content-Type header must be application/json.' });
+  }
+
+  try {
+    const patientId = req.params.patientId;
+
+    // Find the patient document by ID
+    const patient = await Patient.findById(patientId);
+
+    if (!patient) {
+      return res.status(404).json({ success: false, message: 'Patient not found.' });
+    }
+
+    // Update patient properties
+    patient.firstName = req.body.firstName || patient.firstName;
+    patient.lastName = req.body.lastName || patient.lastName;
+    patient.email = req.body.email || patient.email;
+    patient.phoneNumber = req.body.phoneNumber || patient.phoneNumber;
+    patient.weight = req.body.weight || patient.weight;
+    patient.height = req.body.height || patient.height;
+    patient.address = req.body.address || patient.address;
+    patient.gender = req.body.gender !== undefined ? req.body.gender : patient.gender;
+
+    await patient.save();
+
+    res.status(200).json({ success: true, message: 'Patient details updated successfully.' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Error updating patient details.' });
+  }
+};
+
