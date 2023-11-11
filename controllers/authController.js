@@ -39,7 +39,7 @@ module.exports = {
       }
 
       // Generate the salt and hash
-      const salt = await bcrypt.genSalt(16);
+      const salt = await bcrypt.genSalt(10);
       const hash = await bcrypt.hash(password, salt);
 
       // Create the user document with only salt and hash
