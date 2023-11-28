@@ -70,16 +70,28 @@ module.exports = {
         console.log(err);
         return res.status(401).json({ success: false, message: 'Login failed.' });
       }
-
+  
       const isValidPassword = await bcrypt.compare(req.body.password, user.hash);
-
+  
       if (!isValidPassword) {
         return res.status(401).json({ success: false, message: 'Invalid password.' });
       }
-
+  
       const token = createToken(user);
-
-      res.json({ success: true, token, user });
+  
+      // Include user details in the response
+      const userWithoutSensitiveInfo = {
+        _id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        gender: user.gender,
+        healthcareProvider: user.healthcareProvider
+        // Include other user details as needed
+      };
+  
+      res.json({ success: true, token, user: userWithoutSensitiveInfo });
     })(req, res);
   },
   
