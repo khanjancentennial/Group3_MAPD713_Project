@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.post('/register', authController.register);
 router.post('/login', authController.login);
+router.put('/users/:userId', authController.updateUserDetails);
 // router.get('/profile', passport.authenticate('jwt', { session: false }), authController.profile);
 
 module.exports = router;

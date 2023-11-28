@@ -82,6 +82,47 @@ module.exports = {
       res.json({ success: true, token, user });
     })(req, res);
   },
+  
+  updateUserDetails: async (req, res) => {
+    if (req.get('Content-Type') !== 'application/json') {
+      return res.status(400).json({ success: false, message: 'Content-Type header must be application/json.' });
+    }
+
+    const userId = req.params.userId;
+
+    const { firstName, lastName, email, phoneNumber, password, gender, healthcareProvider } = req.body;
+
+    try {
+      // Find the user by ID
+      const user = await User.findById(userId);
+
+      if (!user) {
+        return res.status(404).json({ success: false, message: 'User not found.' });
+      }
+
+      // Update user details
+      user.firstName = firstName || user.firstName;
+      user.lastName = lastName || user.lastName;
+      user.email = email || user.email;
+      user.phoneNumber = phoneNumber || user.phoneNumber;
+      user.gender = gender !== undefined ? gender : user.gender;
+      user.healthcareProvider = healthcareProvider !== undefined ? healthcareProvider : user.healthcareProvider;
+
+      if (password) {
+        // If password is provided, generate salt and hash
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(password, salt);
+        user.salt = salt;
+        user.hash = hash;
+      }
+
+      await user.save();
+
+      res.status(200).json({ success: true, message: 'User details updated successfully.' });
+    } catch (err) {
+      res.status(500).json({ success: false, message: 'Error updating user details.' });
+    }
+  },
 
   // profile: (req, res) => {
   //   res.json({ user: req.user });
