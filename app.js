@@ -1,13 +1,15 @@
 const express = require('express');
+const http = require('http');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const flash = require('connect-flash');
 const mongoose = require('mongoose');
 const passport = require('passport');
-const config = require('./config/db'); 
+const config = require('./config/db');
 const secret = require('./config/secret');
 
 const app = express();
+const server = http.createServer(app);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -41,13 +43,15 @@ const patientRoutes = require('./routes/patientRoutes');
 app.use('/patient', patientRoutes);
 
 const clinicalTestsRoutes = require('./routes/clinicalTests');
-app.use('/clinicalTest', clinicalTestsRoutes);
+app.use('/api/clinical-tests', clinicalTestsRoutes);  // Update path
 
-//define port number
+// Define port number
 const port = process.env.PORT || 3000;
-const host = '127.0.0.1';
+const host = 'group3-mapd713.onrender.com';
 
-// listen post number and host address
-const server = app.listen(port, () => {
-  console.log(`Server is running on http://${host}:${port}`);
+// Listen on the HTTP server
+const serverInstance = server.listen(port, () => {
+  console.log(`Server is running on http://${host}`);
 });
+
+module.exports = app;  // Export the Express app
