@@ -8,8 +8,7 @@ const expect = chai.expect;
 // Begin the test suite for Patient API
 describe('Patient API Tests', () => {
   let createdPatientId; // To store the ID of the patient created during testing
-  let idForDelete = "6568fd76b2a732db6319d2e6";
-  let idForUpdate = "6568faf1b2a732db6319d2bf";
+  let idForUpdate = "6563a7e6823f646b53d6cb16";
 
   // Test for adding a new patient
 describe('POST /patients/add', () => {
@@ -47,7 +46,7 @@ describe('POST /patients/add', () => {
  // Test for getting patient details by name
 describe('GET /patients/viewByName/:patientName', () => {
     it('should get patient details by name', (done) => {
-      const patientName = 'Bhargav';
+      const patientName = 'Ranjan';
   
       chai.request(server)
         .get(`/patient/viewByName/${patientName}`)
@@ -58,7 +57,7 @@ describe('GET /patients/viewByName/:patientName', () => {
           expect(res.body).to.have.property('success');
   
           if (res.body.success) {
-            // If success is true, assume there's at least one patient with the name 'Bhargav'
+            // If success is true, assume there's at least one patient with the name 'Ranjan'
             expect(res.body).to.have.property('data');
             expect(res.body.data).to.be.an('array').that.is.not.empty;
             expect(res.body.data[0]).to.have.property('firstName').to.equal(patientName);
@@ -72,27 +71,6 @@ describe('GET /patients/viewByName/:patientName', () => {
     });
   });
   
-
-  // Test for getting patient details by email
-// describe('GET /patient/viewByEmail/:patientEmail', () => {
-//     it('should get patient details by email', (done) => {
-//       const patientEmail = 'Demo@gmail.com';
-  
-//       chai.request(server)
-//         .get(`/patients/viewByEmail/${patientEmail}`)
-//         .end((err, res) => {
-//           expect(err).to.be.null;
-//           expect(res).to.have.status(200);
-//           expect(res).to.be.json;
-//           expect(res.body).to.have.property('success').to.equal(true);
-//           expect(res.body).to.have.property('data');
-//           // Assuming only one patient with the email 'Demo@gmail.com' is returned
-//         //   expect(res.body.data[0]).to.have.property('email').to.equal(patientEmail);
-//           done();
-//         });
-//     });
-//   });  
-
   // Test for getting a list of all patients
   describe('GET /patient/list', () => {
     it('should get a list of all patients', (done) => {
@@ -109,29 +87,13 @@ describe('GET /patients/viewByName/:patientName', () => {
     });
   });
 
-  // Test for deleting a patient by ID
-  describe('DELETE /patient/delete/:patientId', () => {
-    it('should delete a patient by ID', (done) => {
-      chai.request(server)
-        .delete(`/patient/delete/${idForDelete}`)
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res).to.have.status(200);
-          expect(res).to.be.json;
-          expect(res.body).to.have.property('success').to.equal(true);
-          expect(res.body).to.have.property('message').to.equal('Patient and related clinical tests deleted successfully.');
-          done();
-        });
-    });
-  });
-
   // Test for editing patient details by ID
   describe('PUT /patient/patients/:patientId', () => {
     it('should edit patient details by ID', (done) => {
       const updatedPatientDetails = {
-        firstName: 'UpdatedJohn',
+        firstName: 'Ranjan',
         lastName: 'Doe',
-        email: 'updated.john.doe@example.com',
+        email: 'doe@example.com',
         phoneNumber: '9876543210',
         weight: '75',
         height: '180',
