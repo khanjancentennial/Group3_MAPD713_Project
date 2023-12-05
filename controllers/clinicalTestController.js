@@ -94,10 +94,10 @@ exports.getClinicalTestsForPatient = async (req, res) => {
 
 // Get clinical test record by ID
 exports.getClinicalTestById = async (req, res) => {
-  const testId = req.params.clinicalTestId; // Assuming 'clinicalTestId' is the route parameter
+  const testId = req.params.testId; // Assuming 'clinicalTestId' is the route parameter
 
   try {
-    const clinicalTest = await ClinicalTest.findById({ _id: testId });
+    const clinicalTest = await ClinicalTest.findById(testId);
 
     if (!clinicalTest) {
       return res.status(404).json({ success: false, message: 'Clinical test not found.' });
