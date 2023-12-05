@@ -110,7 +110,6 @@ exports.getClinicalTestById = async (req, res) => {
   }
 };
 
-
 // // Get clinical test record by ID
 // exports.getClinicalTestById = async (req, res) => {
 //   const testId = req.params.testId;
