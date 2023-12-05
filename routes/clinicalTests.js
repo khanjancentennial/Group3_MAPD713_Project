@@ -14,6 +14,9 @@ router.get('/clinical-tests/:patientId', clinicalTestController.getClinicalTests
 // Update a clinical test record
 router.put('/clinical-tests/:testId', clinicalTestController.updateClinicalTest);
 
+// Get a specific clinical test by ID
+router.get('/clinical-tests/:testId', clinicalTestController.getClinicalTestById);
+
 // Delete a clinical test record
 router.delete('/clinical-tests/:testId', clinicalTestController.deleteClinicalTest);
 

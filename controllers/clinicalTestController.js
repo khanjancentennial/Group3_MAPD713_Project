@@ -92,6 +92,27 @@ exports.getClinicalTestsForPatient = async (req, res) => {
   }
 }
 
+// Get clinical test record by ID
+exports.getClinicalTestById = async (req, res) => {
+  const testId = req.params.testId;
+
+  console.log('Received testId:', testId);
+
+  try {
+    const clinicalTest = await ClinicalTest.findById(testId).populate('patient');
+
+    if (!clinicalTest) {
+      console.log('Clinical test not found.');
+      return res.status(404).json({ success: false, message: 'Clinical test not found.' });
+    }
+
+    res.status(200).json({ success: true, data: clinicalTest });
+  } catch (err) {
+    console.error('Error retrieving clinical test:', err);
+    res.status(500).json({ success: false, message: 'Error retrieving clinical test.' });
+  }
+};
+
 // Update a clinical test record
 exports.updateClinicalTest = async (req, res) => {
    // Check the Content-Type header
