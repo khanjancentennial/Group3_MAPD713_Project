@@ -81,10 +81,10 @@ exports.getAllClinicalTests = async (req, res) => {
 
 // Get clinical test records for a specific patient
 exports.getClinicalTestsForPatient = async (req, res) => {
-  const patientId = req.params.patientId;
+  const patientId = req.params.patientId; // Assuming 'patientId' is the route parameter
 
   try {
-    const clinicalTests = await ClinicalTest.find({ patient: patientId });
+    const clinicalTests = await ClinicalTest.find({ 'patient._id': patientId });
 
     res.status(200).json({ success: true, data: clinicalTests });
   } catch (err) {
