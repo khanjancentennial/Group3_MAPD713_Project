@@ -97,7 +97,7 @@ exports.getClinicalTestById = async (req, res) => {
   const testId = req.params.clinicalTestId; // Assuming 'clinicalTestId' is the route parameter
 
   try {
-    const clinicalTest = await ClinicalTest.findById(testId);
+    const clinicalTest = await ClinicalTest.findById({ _id: testId });
 
     if (!clinicalTest) {
       return res.status(404).json({ success: false, message: 'Clinical test not found.' });
