@@ -72,7 +72,7 @@ exports.createClinicalTest = async (req, res) => {
 exports.getAllClinicalTests = async (req, res) => {
     try {
       const clinicalTests = await ClinicalTest.find();
-  
+  console.log('Clinical Tests:');
       res.status(200).json({ success: true, data: clinicalTests });
     } catch (err) {
       res.status(500).json({ success: false, message: 'Error retrieving clinical tests.' });
@@ -99,7 +99,7 @@ exports.getClinicalTestById = async (req, res) => {
   console.log('Received testId:', testId);
 
   try {
-    const clinicalTest = await ClinicalTest.findById(testId).populate('patient');
+    const clinicalTest = await ClinicalTest.findById(testId);
 
     if (!clinicalTest) {
       console.log('Clinical test not found.');
