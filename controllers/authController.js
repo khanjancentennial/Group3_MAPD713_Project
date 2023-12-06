@@ -99,27 +99,52 @@ module.exports = {
     if (req.get('Content-Type') !== 'application/json') {
       return res.status(400).json({ success: false, message: 'Content-Type header must be application/json.' });
     }
-
+  
     const userId = req.params.userId;
-
+  
     const { firstName, lastName, email, phoneNumber, password, gender, healthcareProvider } = req.body;
-
+  
     try {
       // Find the user by ID
       const user = await User.findById(userId);
-
+  
       if (!user) {
         return res.status(404).json({ success: false, message: 'User not found.' });
       }
-
+  
+      // Validation for first name
+      if (!firstName) {
+        return res.status(400).json({ success: false, message: 'First name is required.' });
+      }
+  
+      // Validation for last name
+      if (!lastName) {
+        return res.status(400).json({ success: false, message: 'Last name is required.' });
+      }
+  
+      // Validation for phone number
+      if (!phoneNumber || !/^\d{10}$/.test(phoneNumber)) {
+        return res.status(400).json({ success: false, message: 'Invalid phone number format.' });
+      }
+  
+      // Validation for gender
+      if (gender !== 0 && gender !== 1) {
+        return res.status(400).json({ success: false, message: 'Invalid gender value. Use 0 for male, 1 for female.' });
+      }
+  
+      // Validation for healthcare provider
+      if (healthcareProvider !== 0 && healthcareProvider !== 1) {
+        return res.status(400).json({ success: false, message: 'Invalid healthcare provider value. Use 0 for no, 1 for yes.' });
+      }
+  
       // Update user details
-      user.firstName = firstName || user.firstName;
-      user.lastName = lastName || user.lastName;
+      user.firstName = firstName;
+      user.lastName = lastName;
       user.email = email || user.email;
-      user.phoneNumber = phoneNumber || user.phoneNumber;
-      user.gender = gender !== undefined ? gender : user.gender;
-      user.healthcareProvider = healthcareProvider !== undefined ? healthcareProvider : user.healthcareProvider;
-
+      user.phoneNumber = phoneNumber;
+      user.gender = gender;
+      user.healthcareProvider = healthcareProvider;
+  
       if (password) {
         // If password is provided, generate salt and hash
         const salt = await bcrypt.genSalt(10);
@@ -127,14 +152,15 @@ module.exports = {
         user.salt = salt;
         user.hash = hash;
       }
-
+  
       await user.save();
-
+  
       res.status(200).json({ success: true, message: 'User details updated successfully.' });
     } catch (err) {
       res.status(500).json({ success: false, message: 'Error updating user details.' });
     }
   },
+  
 
 
   getAllUsers: async (req, res) => {
