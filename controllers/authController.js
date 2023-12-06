@@ -107,13 +107,13 @@ module.exports = {
     try {
       // Find the user by ID
       const user = await User.findById(userId);
-  
+      console.log(user);
       if (!user) {
         return res.status(404).json({ success: false, message: 'User not found.' });
       }
   
       // Validation for first name
-      if (!firstName) {
+      if (!firstName.trim()) {
         return res.status(400).json({ success: false, message: 'First name is required.' });
       }
   
