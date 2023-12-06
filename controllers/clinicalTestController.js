@@ -21,22 +21,6 @@ exports.createClinicalTest = async (req, res) => {
         creationDateTime,
         patientId, // Reference to the patient
       } = req.body;
-    
-    // // Validate numbers and check if they are less than or equal to 800
-
-    // const isValidNumber = (value) => {
-    //   const numericValue = parseFloat(value);
-    //   return !isNaN(numericValue) && numericValue <= 800;
-    // };
-    //   if (
-    //     !isValidNumber(bloodPressure) ||
-    //     !isValidNumber(respiratoryRate) ||
-    //     !isValidNumber(bloodOxygenLevel) ||
-    //     !isValidNumber(heartbeatRate)
-    //   ) {
-    //     console.log('Validation error: Values are not valid.');
-    //     return res.status(400).json({ success: false, message: 'Blood pressure value or respiratory Rate value or bloodOxygen Level value or heartbeat Rate value is not valid.' });
-    //   }
       
       // Check if the required fields are not empty
       if (
@@ -49,6 +33,7 @@ exports.createClinicalTest = async (req, res) => {
         return res.status(400).json({ success: false, message: 'Please provide all required fields.' });
       }
 
+      // Validate and check if they are grater than or equal to 800
       if (
         bloodPressure >= 800||
         respiratoryRate >= 800 ||
@@ -133,100 +118,6 @@ exports.getClinicalTestById = async (req, res) => {
   } catch (err) {
     console.error('Error retrieving clinical test:', err);
     res.status(500).json({ success: false, message: 'Error retrieving clinical test.' });
-  }
-};
-
-// // Get clinical test record by ID
-// exports.getClinicalTestById = async (req, res) => {
-//   const testId = req.params.testId;
-
-//   console.log('Received testId:', testId);
-
-//   try {
-//     const clinicalTest = await ClinicalTest.findById(testId);
-
-//     if (!clinicalTest) {
-//       console.log('Clinical test not found.');
-//       return res.status(404).json({ success: false, message: 'Clinical test not found.' });
-//     }
-
-//     res.status(200).json({ success: true, data: clinicalTest });
-//   } catch (err) {
-//     console.error('Error retrieving clinical test:', err);
-//     res.status(500).json({ success: false, message: 'Error retrieving clinical test.' });
-//   }
-// };
-
-// Function to add clinical test details
-// Function to add clinical test details
-exports.addClinicalTest = async (req, res) => {
-  // Check the Content-Type header
-  if (req.get('Content-Type') !== 'application/json') {
-    return res.status(400).json({ success: false, message: 'Content-Type header must be application/json.' });
-  }
-
-  try {
-    const {
-      bloodPressure,
-      respiratoryRate,
-      bloodOxygenLevel,
-      heartbeatRate,
-      chiefComplaint,
-      pastMedicalHistory,
-      medicalDiagnosis,
-      medicalPrescription,
-      creationDateTime,
-      patientId,
-    } = req.body;
-
-    // Validate numbers and check if they are less than or equal to 800
-    const isValidNumber = (value) => {
-      const numericValue = parseFloat(value);
-      return !isNaN(numericValue) && numericValue <= 800;
-    };
-
-    if (
-      !isValidNumber(bloodPressure) ||
-      !isValidNumber(respiratoryRate) ||
-      !isValidNumber(bloodOxygenLevel) ||
-      !isValidNumber(heartbeatRate)
-    ) {
-      console.log('Validation error: Values are not valid.');
-      return res.status(400).json({ success: false, message: 'Blood pressure value or respiratory Rate value or bloodOxygen Level value or heartbeat Rate value is not valid.' });
-    }
-
-    // Validation for chiefComplaint, pastMedicalHistory, medicalDiagnosis, and medicalPrescription
-    if (!chiefComplaint || !pastMedicalHistory || !medicalDiagnosis || !medicalPrescription) {
-      console.log('Validation error: Please fill in all relevant fields.');
-      return res.status(400).json({ success: false, message: 'Please fill in all relevant fields.' });
-    }
-
-    // Additional validations for other fields can be added here
-
-    // Create a new clinical test object
-    const newClinicalTest = {
-      bloodPressure: parseFloat(bloodPressure),
-      respiratoryRate: parseFloat(respiratoryRate),
-      bloodOxygenLevel: parseFloat(bloodOxygenLevel),
-      heartbeatRate: parseFloat(heartbeatRate),
-      chiefComplaint,
-      pastMedicalHistory,
-      medicalDiagnosis,
-      medicalPrescription,
-      creationDateTime,
-      patientId,
-    };
-
-    // Save the clinical test
-    // You should replace the following code with your logic to save the clinical test
-    // Example:
-    // const savedClinicalTest = await ClinicalTest.create(newClinicalTest);
-
-    console.log('Clinical test added successfully!');
-    res.status(200).json({ success: true, message: 'Clinical test added successfully!' });
-  } catch (err) {
-    console.error('Error adding clinical test:', err);
-    res.status(500).json({ success: false, message: 'An unexpected error occurred. Please try again.' });
   }
 };
 
