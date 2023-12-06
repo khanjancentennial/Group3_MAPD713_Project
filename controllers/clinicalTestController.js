@@ -152,12 +152,17 @@ exports.addClinicalTest = async (req, res) => {
       patientId,
     } = req.body;
 
-    // Validation for bloodPressure, respiratoryRate, bloodOxygenLevel, and heartbeatRate
+    // Validate numbers and check if they are less than or equal to 800
+    const isValidNumber = (value) => {
+      const numericValue = parseFloat(value);
+      return !isNaN(numericValue) && numericValue <= 800;
+    };
+
     if (
-      parseInt(bloodPressure, 10) > 800 ||
-      parseInt(respiratoryRate, 10) > 800 ||
-      parseInt(bloodOxygenLevel, 10) > 800 ||
-      parseInt(heartbeatRate, 10) > 800
+      !isValidNumber(bloodPressure) ||
+      !isValidNumber(respiratoryRate) ||
+      !isValidNumber(bloodOxygenLevel) ||
+      !isValidNumber(heartbeatRate)
     ) {
       console.log('Validation error: Values are not valid.');
       return res.status(400).json({ success: false, message: 'Values are not valid.' });
@@ -173,10 +178,10 @@ exports.addClinicalTest = async (req, res) => {
 
     // Create a new clinical test object
     const newClinicalTest = {
-      bloodPressure: parseInt(bloodPressure, 10),
-      respiratoryRate: parseInt(respiratoryRate, 10),
-      bloodOxygenLevel: parseInt(bloodOxygenLevel, 10),
-      heartbeatRate: parseInt(heartbeatRate, 10),
+      bloodPressure: parseFloat(bloodPressure),
+      respiratoryRate: parseFloat(respiratoryRate),
+      bloodOxygenLevel: parseFloat(bloodOxygenLevel),
+      heartbeatRate: parseFloat(heartbeatRate),
       chiefComplaint,
       pastMedicalHistory,
       medicalDiagnosis,
@@ -197,6 +202,7 @@ exports.addClinicalTest = async (req, res) => {
     res.status(500).json({ success: false, message: 'An unexpected error occurred. Please try again.' });
   }
 };
+
 
   // Delete a clinical test record
   exports.deleteClinicalTest = async (req, res) => {
