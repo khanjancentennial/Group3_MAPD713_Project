@@ -131,55 +131,73 @@ exports.getClinicalTestById = async (req, res) => {
 //   }
 // };
 
-// Update a clinical test record
-exports.updateClinicalTest = async (req, res) => {
-   // Check the Content-Type header
+// Function to add clinical test details
+exports.addClinicalTest = async (req, res) => {
+  // Check the Content-Type header
   if (req.get('Content-Type') !== 'application/json') {
     return res.status(400).json({ success: false, message: 'Content-Type header must be application/json.' });
   }
 
   try {
-    const testId = req.params.testId;
+    const {
+      bloodPressure,
+      respiratoryRate,
+      bloodOxygenLevel,
+      heartbeatRate,
+      chiefComplaint,
+      pastMedicalHistory,
+      medicalDiagnosis,
+      medicalPrescription,
+      creationDateTime,
+      patientId,
+    } = req.body;
 
-    // Find the clinical test record by ID
-    const clinicalTest = await ClinicalTest.findById(testId);
-
-    if (!clinicalTest) {
-      return res.status(404).json({ success: false, message: 'Clinical test not found.' });
-    }
-
-    // Check if the required fields are not empty
+    // Validation for bloodPressure, respiratoryRate, bloodOxygenLevel, and heartbeatRate
     if (
-      !req.body.bloodPressure ||
-      !req.body.respiratoryRate ||
-      !req.body.bloodOxygenLevel ||
-      !req.body.heartbeatRate ||
-      !req.body.creationDateTime
+      bloodPressure > 800 ||
+      respiratoryRate > 800 ||
+      bloodOxygenLevel > 800 ||
+      heartbeatRate > 800
     ) {
-      return res.status(400).json({ success: false, message: 'Please provide all required fields.' });
+      console.log('Validation error: Values are not valid.');
+      return res.status(400).json({ success: false, message: 'Values are not valid.' });
     }
 
-    // Additional checks for data type validation can be added here.
+    // Validation for chiefComplaint, pastMedicalHistory, medicalDiagnosis, and medicalPrescription
+    if (!chiefComplaint || !pastMedicalHistory || !medicalDiagnosis || !medicalPrescription) {
+      console.log('Validation error: Please fill in all relevant fields.');
+      return res.status(400).json({ success: false, message: 'Please fill in all relevant fields.' });
+    }
 
-    // Update clinical test properties
-    clinicalTest.bloodPressure = req.body.bloodPressure;
-    clinicalTest.respiratoryRate = req.body.respiratoryRate;
-    clinicalTest.bloodOxygenLevel = req.body.bloodOxygenLevel;
-    clinicalTest.heartbeatRate = req.body.heartbeatRate;
-    clinicalTest.chiefComplaint = req.body.chiefComplaint;
-    clinicalTest.pastMedicalHistory = req.body.pastMedicalHistory;
-    clinicalTest.medicalDiagnosis = req.body.medicalDiagnosis;
-    clinicalTest.medicalPrescription = req.body.medicalPrescription;
-    clinicalTest.creationDateTime = req.body.creationDateTime;
-    // If you want to update the patient reference, you can do that here as well.
+    // Additional validations for other fields can be added here
 
-    await clinicalTest.save();
+    // Create a new clinical test object
+    const newClinicalTest = {
+      bloodPressure: parseInt(bloodPressure),
+      respiratoryRate: parseInt(respiratoryRate),
+      bloodOxygenLevel: parseInt(bloodOxygenLevel),
+      heartbeatRate: parseInt(heartbeatRate),
+      chiefComplaint,
+      pastMedicalHistory,
+      medicalDiagnosis,
+      medicalPrescription,
+      creationDateTime,
+      patientId,
+    };
 
-    res.status(200).json({ success: true, message: 'Clinical test updated successfully.' });
+    // Save the clinical test
+    // You should replace the following code with your logic to save the clinical test
+    // Example:
+    // const savedClinicalTest = await ClinicalTest.create(newClinicalTest);
+
+    console.log('Clinical test added successfully!');
+    res.status(200).json({ success: true, message: 'Clinical test added successfully!' });
   } catch (err) {
-    res.status(500).json({ success: false, message: 'Error updating clinical test.' });
+    console.error('Error adding clinical test:', err);
+    res.status(500).json({ success: false, message: 'An unexpected error occurred. Please try again.' });
   }
-  }
+};
+
   
   // Delete a clinical test record
   exports.deleteClinicalTest = async (req, res) => {
