@@ -202,11 +202,35 @@ exports.editPatientById = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Patient not found.' });
     }
 
+    // Validation for first name
+    if (!req.body.firstName.trim()) {
+      console.log('Validation error: First name is required.');
+      return res.status(400).json({ success: false, message: 'First name is required.' });
+    }
+
+    // Validation for last name
+    if (!req.body.lastName.trim()) {
+      console.log('Validation error: Last name is required.');
+      return res.status(400).json({ success: false, message: 'Last name is required.' });
+    }
+
+    // Validation for email
+    if (!req.body.email.trim() || !isValidEmail(req.body.email)) {
+      console.log('Validation error: Invalid email address.');
+      return res.status(400).json({ success: false, message: 'Invalid email address.' });
+    }
+
+    // Validation for phone number
+    if (!req.body.phoneNumber || !/^\d{10}$/.test(req.body.phoneNumber)) {
+      console.log('Validation error: Invalid phone number format.');
+      return res.status(400).json({ success: false, message: 'Invalid phone number format.' });
+    }
+
     // Update patient properties
-    patient.firstName = req.body.firstName || patient.firstName;
-    patient.lastName = req.body.lastName || patient.lastName;
-    patient.email = req.body.email || patient.email;
-    patient.phoneNumber = req.body.phoneNumber || patient.phoneNumber;
+    patient.firstName = req.body.firstName;
+    patient.lastName = req.body.lastName;
+    patient.email = req.body.email;
+    patient.phoneNumber = req.body.phoneNumber;
     patient.weight = req.body.weight || patient.weight;
     patient.height = req.body.height || patient.height;
     patient.address = req.body.address || patient.address;
@@ -214,9 +238,18 @@ exports.editPatientById = async (req, res) => {
 
     await patient.save();
 
+    console.log('Patient details updated successfully.');
     res.status(200).json({ success: true, message: 'Patient details updated successfully.' });
   } catch (err) {
+    console.error('Error updating patient details:', err);
     res.status(500).json({ success: false, message: 'Error updating patient details.' });
   }
 };
+
+// Function to validate email address format
+function isValidEmail(email) {
+  // Add your email validation logic here
+  // For a simple example, check if it contains '@'
+  return email.includes('@');
+}
 

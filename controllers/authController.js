@@ -118,7 +118,7 @@ module.exports = {
       }
   
       // Validation for last name
-      if (!lastName) {
+      if (!lastName.trim()) {
         return res.status(400).json({ success: false, message: 'Last name is required.' });
       }
   
