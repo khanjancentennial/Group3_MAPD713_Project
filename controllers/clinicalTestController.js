@@ -132,6 +132,7 @@ exports.getClinicalTestById = async (req, res) => {
 // };
 
 // Function to add clinical test details
+// Function to add clinical test details
 exports.addClinicalTest = async (req, res) => {
   // Check the Content-Type header
   if (req.get('Content-Type') !== 'application/json') {
@@ -166,6 +167,25 @@ exports.addClinicalTest = async (req, res) => {
     ) {
       console.log('Validation error: Values are not valid.');
       return res.status(400).json({ success: false, message: 'Values are not valid.' });
+    }
+
+    // Validation for blood pressure value
+    if (!bloodPressure || parseFloat(bloodPressure) > 800) {
+      console.log('Validation error: Blood pressure value is empty or exceeds the limit.');
+      return res.status(400).json({ success: false, message: 'Blood pressure value is empty or exceeds the limit.' });
+    }
+    if (!respiratoryRate || parseFloat(respiratoryRate) > 800) {
+      console.log('Validation error: respiratory Rate value is empty or exceeds the limit.');
+      return res.status(400).json({ success: false, message: 'respiratory Rate value is empty or exceeds the limit.' });
+    }
+    if (!bloodOxygenLevel || parseFloat(bloodOxygenLevel) > 800) {
+      console.log('Validation error: bloodOxygen Level value is empty or exceeds the limit.');
+      return res.status(400).json({ success: false, message: 'bloodOxygen Level value is empty or exceeds the limit.' });
+    }
+
+    if (!heartbeatRate || parseFloat(heartbeatRate) > 800) {
+      console.log('Validation error: heartbeat Rate value is empty or exceeds the limit.');
+      return res.status(400).json({ success: false, message: 'heartbeat Rate value is empty or exceeds the limit.' });
     }
 
     // Validation for chiefComplaint, pastMedicalHistory, medicalDiagnosis, and medicalPrescription
