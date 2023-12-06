@@ -3,7 +3,7 @@ const router = express.Router();
 const clinicalTestController = require('../controllers/clinicalTestController');
 
 // Create a new clinical test record
-router.post('/clinical-tests', clinicalTestController.addClinicalTest);
+router.post('/clinical-tests', clinicalTestController.createClinicalTest);
 
 // Get all clinical test records
 router.get('/clinical-tests', clinicalTestController.getAllClinicalTests);
