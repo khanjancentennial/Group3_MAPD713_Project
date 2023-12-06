@@ -224,6 +224,56 @@ exports.addClinicalTest = async (req, res) => {
 };
 
 
+// Update a clinical test record
+exports.updateClinicalTest = async (req, res) => {
+  // Check the Content-Type header
+ if (req.get('Content-Type') !== 'application/json') {
+   return res.status(400).json({ success: false, message: 'Content-Type header must be application/json.' });
+ }
+
+ try {
+   const testId = req.params.testId;
+
+   // Find the clinical test record by ID
+   const clinicalTest = await ClinicalTest.findById(testId);
+
+   if (!clinicalTest) {
+     return res.status(404).json({ success: false, message: 'Clinical test not found.' });
+   }
+
+   // Check if the required fields are not empty
+   if (
+     !req.body.bloodPressure ||
+     !req.body.respiratoryRate ||
+     !req.body.bloodOxygenLevel ||
+     !req.body.heartbeatRate ||
+     !req.body.creationDateTime
+   ) {
+     return res.status(400).json({ success: false, message: 'Please provide all required fields.' });
+   }
+
+   // Additional checks for data type validation can be added here.
+
+   // Update clinical test properties
+   clinicalTest.bloodPressure = req.body.bloodPressure;
+   clinicalTest.respiratoryRate = req.body.respiratoryRate;
+   clinicalTest.bloodOxygenLevel = req.body.bloodOxygenLevel;
+   clinicalTest.heartbeatRate = req.body.heartbeatRate;
+   clinicalTest.chiefComplaint = req.body.chiefComplaint;
+   clinicalTest.pastMedicalHistory = req.body.pastMedicalHistory;
+   clinicalTest.medicalDiagnosis = req.body.medicalDiagnosis;
+   clinicalTest.medicalPrescription = req.body.medicalPrescription;
+   clinicalTest.creationDateTime = req.body.creationDateTime;
+   // If you want to update the patient reference, you can do that here as well.
+
+   await clinicalTest.save();
+
+   res.status(200).json({ success: true, message: 'Clinical test updated successfully.' });
+ } catch (err) {
+   res.status(500).json({ success: false, message: 'Error updating clinical test.' });
+ }
+ }
+
   // Delete a clinical test record
   exports.deleteClinicalTest = async (req, res) => {
     try {
