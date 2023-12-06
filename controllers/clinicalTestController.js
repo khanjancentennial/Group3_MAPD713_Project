@@ -154,10 +154,10 @@ exports.addClinicalTest = async (req, res) => {
 
     // Validation for bloodPressure, respiratoryRate, bloodOxygenLevel, and heartbeatRate
     if (
-      parseInt(bloodPressure) > 800 ||
-      parseInt(respiratoryRate) > 800 ||
-      parseInt(bloodOxygenLevel) > 800 ||
-      parseInt(heartbeatRate) > 800
+      parseInt(bloodPressure, 10) > 800 ||
+      parseInt(respiratoryRate, 10) > 800 ||
+      parseInt(bloodOxygenLevel, 10) > 800 ||
+      parseInt(heartbeatRate, 10) > 800
     ) {
       console.log('Validation error: Values are not valid.');
       return res.status(400).json({ success: false, message: 'Values are not valid.' });
@@ -173,10 +173,10 @@ exports.addClinicalTest = async (req, res) => {
 
     // Create a new clinical test object
     const newClinicalTest = {
-      bloodPressure: parseInt(bloodPressure),
-      respiratoryRate: parseInt(respiratoryRate),
-      bloodOxygenLevel: parseInt(bloodOxygenLevel),
-      heartbeatRate: parseInt(heartbeatRate),
+      bloodPressure: parseInt(bloodPressure, 10),
+      respiratoryRate: parseInt(respiratoryRate, 10),
+      bloodOxygenLevel: parseInt(bloodOxygenLevel, 10),
+      heartbeatRate: parseInt(heartbeatRate, 10),
       chiefComplaint,
       pastMedicalHistory,
       medicalDiagnosis,
