@@ -21,9 +21,9 @@ const createToken = (user) => {
 
 module.exports = {
   register: async (req, res) => {
-    if (req.get('Content-Type') !== 'application/json') {
-      return res.status(400).json({ success: false, message: 'Content-Type header must be application/json.' });
-    }
+    // if (req.get('Content-Type') !== 'application/json') {
+    //   return res.status(400).json({ success: false, message: 'Content-Type header must be application/json.' });
+    // }
 
     const { firstName, lastName, email, phoneNumber, password,gender,healthcareProvider } = req.body;
 
@@ -56,7 +56,7 @@ module.exports = {
 
       await newUser.save();
 
-      res.status(201).json({ success: true, message: 'User registered successfully.' });
+      res.status(200).json({ success: true, message: 'User registered successfully.' });
     } catch (err) {
       res.status(500).json({ success: false, message: 'Error registering user.' });
     }
@@ -92,13 +92,13 @@ module.exports = {
       };
   
       res.json({ success: true, token, user: userWithoutSensitiveInfo });
-    })(req, res);
+    })(req, res)
   },
   
   updateUserDetails: async (req, res) => {
-    if (req.get('Content-Type') !== 'application/json') {
-      return res.status(400).json({ success: false, message: 'Content-Type header must be application/json.' });
-    }
+    // if (req.get('Content-Type') !== 'application/json') {
+    //   return res.status(400).json({ success: false, message: 'Content-Type header must be application/json.' });
+    // }
   
     const userId = req.params.userId;
   
