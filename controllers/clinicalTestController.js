@@ -4,9 +4,9 @@ const Patient = require('../models/patient');
 
 // Create a new clinical test record
 exports.createClinicalTest = async (req, res) => {
-    if (req.get('Content-Type') !== 'application/json') {
-        return res.status(400).json({ success: false, message: 'Content-Type header must be application/json.' });
-      }
+    // if (req.get('Content-Type') !== 'application/json') {
+    //     return res.status(400).json({ success: false, message: 'Content-Type header must be application/json.' });
+    //   }
     
       // Retrieve data from the request body
       const {

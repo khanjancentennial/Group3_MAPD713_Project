@@ -4,9 +4,9 @@ const ClinicalTest = require('../models/clinicalTest');
 
 // Function to create a new patient
 exports.addPatient = async (req, res) => {
-  if (req.get('Content-Type') !== 'application/json') {
-    return res.status(400).json({ success: false, message: 'Content-Type header must be application/json.' });
-  }
+  // if (req.get('Content-Type') !== 'application/json') {
+  //   return res.status(400).json({ success: false, message: 'Content-Type header must be application/json.' });
+  // }
 
   const {
     firstName,
@@ -188,9 +188,9 @@ exports.deletePatientByEmail = async (req, res) => {
 // Function to edit patient details by ID
 exports.editPatientById = async (req, res) => {
   // Check the Content-Type header
-  if (req.get('Content-Type') !== 'application/json') {
-    return res.status(400).json({ success: false, message: 'Content-Type header must be application/json.' });
-  }
+  // if (req.get('Content-Type') !== 'application/json') {
+  //   return res.status(400).json({ success: false, message: 'Content-Type header must be application/json.' });
+  // }
 
   try {
     const patientId = req.params.patientId;
