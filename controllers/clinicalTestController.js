@@ -125,9 +125,9 @@ exports.getClinicalTestById = async (req, res) => {
 // Update a clinical test record
 exports.updateClinicalTest = async (req, res) => {
   // Check the Content-Type header
- if (req.get('Content-Type') !== 'application/json') {
-   return res.status(400).json({ success: false, message: 'Content-Type header must be application/json.' });
- }
+//  if (req.get('Content-Type') !== 'application/json') {
+//    return res.status(400).json({ success: false, message: 'Content-Type header must be application/json.' });
+//  }
 
  try {
    const testId = req.params.testId;
