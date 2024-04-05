@@ -10,6 +10,7 @@ const patientSchema = new Schema({
   height: String,
   address: String,
   gender: Number,
+  status: String
   // Additional patient information fields
 });
 
