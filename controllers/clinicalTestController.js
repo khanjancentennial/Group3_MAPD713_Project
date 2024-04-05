@@ -79,7 +79,61 @@ exports.createClinicalTest = async (req, res) => {
 //       }
 // }
 
-const {
+ const {
+    bloodPressure,
+    respiratoryRate,
+    bloodOxygenLevel,
+    heartbeatRate,
+    chiefComplaint,
+    pastMedicalHistory,
+    medicalDiagnosis,
+    medicalPrescription,
+    creationDateTime,
+    patientId // Reference to the patient
+  } = req.body;
+
+  // Check if the required fields are not empty
+  if (
+    !bloodPressure ||
+    !respiratoryRate ||
+    !bloodOxygenLevel ||
+    !heartbeatRate ||
+    !creationDateTime
+  ) {
+    return res.status(400).json({ success: false, message: 'Please provide all required fields.' });
+  }
+
+  // Validate and check if they are greater than or equal to 800
+  if (
+    bloodPressure >= 800 ||
+    respiratoryRate >= 800 ||
+    bloodOxygenLevel >= 800 ||
+    heartbeatRate >= 800
+  ) {
+    return res.status(400).json({ success: false, message: 'Blood pressure value or respiratory Rate value or bloodOxygen Level value or heartbeat Rate value is not valid.' });
+  }
+
+  // Determine status based on provided values
+  let status = 'normal';
+  if (
+    bloodPressure > 140 ||
+    respiratoryRate > 30 ||
+    bloodOxygenLevel < 90 ||
+    heartbeatRate > 100
+  ) {
+    status = 'critical';
+  }
+
+  try {
+    // Update patient's status in the Patients collection
+    const patient = await Patient.findByIdAndUpdate(patientId, { status }, { new: true });
+
+    if (!patient) {
+      return res.status(404).json({ success: false, message: 'Patient not found.' });
+    }
+
+    // Create a new clinical test document
+    const clinicalTest = new ClinicalTest({
       bloodPressure,
       respiratoryRate,
       bloodOxygenLevel,
@@ -89,75 +143,22 @@ const {
       medicalDiagnosis,
       medicalPrescription,
       creationDateTime,
-      patientId // Reference to the patient
-  } = req.body;
+      status,
+      patient: {
+        _id: patientId,
+        firstName: patient.firstName,
+        lastName: patient.lastName,
+      },
+    });
 
-  // Check if the required fields are not empty
-  if (
-      !bloodPressure ||
-      !respiratoryRate ||
-      !bloodOxygenLevel ||
-      !heartbeatRate ||
-      !creationDateTime
-  ) {
-      return res.status(400).json({ success: false, message: 'Please provide all required fields.' });
-  }
+    await clinicalTest.save();
 
-  // Validate and check if they are greater than or equal to 800
-  if (
-      bloodPressure >= 800 ||
-      respiratoryRate >= 800 ||
-      bloodOxygenLevel >= 800 ||
-      heartbeatRate >= 800
-  ) {
-      return res.status(400).json({ success: false, message: 'Blood pressure value or respiratory Rate value or bloodOxygen Level value or heartbeat Rate value is not valid.' });
-  }
-
-  // Determine status based on provided values
-  let status = 'normal';
-  if (
-      bloodPressure > 140 ||
-      respiratoryRate > 30 ||
-      bloodOxygenLevel < 90 ||
-      heartbeatRate > 100
-  ) {
-      status = 'critical';
-  }
-
-  try {
-      const patient = await Patient.findById(patientId);
-
-      if (!patient) {
-          return res.status(404).json({ success: false, message: 'Patient not found.' });
-      }
-      const clinicalTest = new ClinicalTest({
-          bloodPressure,
-          respiratoryRate,
-          bloodOxygenLevel,
-          heartbeatRate,
-          chiefComplaint,
-          pastMedicalHistory,
-          medicalDiagnosis,
-          medicalPrescription,
-          creationDateTime,
-          status, // Automatically determined status
-          patient: {
-              _id: patientId,
-              firstName: patient.firstName,
-              lastName: patient.lastName,
-          },
-          // Assign the patient reference
-      });
-
-      await clinicalTest.save();
-
-      res.status(201).json({ success: true, message: 'Clinical test created successfully.' });
+    res.status(201).json({ success: true, message: 'Clinical test created successfully.' });
   } catch (err) {
-      res.status(500).json({ success: false, message: 'Error creating clinical test.' });
-      console.log(err);
+    res.status(500).json({ success: false, message: 'Error creating clinical test.' });
+    console.log(err);
   }
 }
-
     
 // Get all clinical test records
 exports.getAllClinicalTests = async (req, res) => {
