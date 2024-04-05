@@ -85,7 +85,7 @@ exports.getPatientByNameAndStatus = async (req, res) => {
     let query = {};
 
     // Check if the patientName is "critical"
-    if (req.params.patientName) {
+    if (req.params.patientName.toLowerCase() === 'critical' || req.params.patientName.toLowerCase() === 'normal') {
       query.status = req.params.patientName;
     } else {
       query.firstName = req.params.patientName;
