@@ -208,55 +208,129 @@ exports.searchClinicalTestsByName = async (req, res) => {
     }
   }
 
-  exports.getSortedCollection = async (req, res) => {
-    try {
-      // Use an aggregation pipeline to group and find the latest clinical test for each patient
-      const aggregationPipeline = [
-        {
-          $lookup: {
-            from: 'patients', // Use the name of your patients collection
-            localField: 'patient._id',
-            foreignField: '_id',
-            as: 'patientInfo',
-          },
-        },
-        {
-          $unwind: '$patientInfo',
-        },
-        {
-          $sort: {
-            'patientInfo.firstName': 1, // Sort by first name in ascending order
-            'patientInfo.lastName': 1, // Then, sort by last name in ascending order
-            'creationDateTime': -1, // Sort by creationDateTime in descending order (latest first)
-          },
-        },
-        {
-          $group: {
-            _id: '$patient._id', // Group by patient ID
-            latestTest: { $first: '$$ROOT' }, // Get the first (latest) test for each patient
-          },
-        },
-        {
-          $replaceRoot: { newRoot: '$latestTest' }, // Replace the root document with the latest test
-        },
+  // exports.getSortedCollection = async (req, res) => {
+  //   try {
+  //     // Use an aggregation pipeline to group and find the latest clinical test for each patient
+  //     const aggregationPipeline = [
+  //       {
+  //         $lookup: {
+  //           from: 'patients', // Use the name of your patients collection
+  //           localField: 'patient._id',
+  //           foreignField: '_id',
+  //           as: 'patientInfo',
+  //         },
+  //       },
+  //       {
+  //         $unwind: '$patientInfo',
+  //       },
+  //       {
+  //         $sort: {
+  //           'patientInfo.firstName': 1, // Sort by first name in ascending order
+  //           'patientInfo.lastName': 1, // Then, sort by last name in ascending order
+  //           'creationDateTime': -1, // Sort by creationDateTime in descending order (latest first)
+  //         },
+  //       },
+  //       {
+  //         $group: {
+  //           _id: '$patient._id', // Group by patient ID
+  //           latestTest: { $first: '$$ROOT' }, // Get the first (latest) test for each patient
+  //         },
+  //       },
+  //       {
+  //         $replaceRoot: { newRoot: '$latestTest' }, // Replace the root document with the latest test
+  //       },
        
-      ];
+  //     ];
   
-      const criticalPatients = await ClinicalTest.aggregate(aggregationPipeline);
-      const filteredCriticalPatients = criticalPatients
-      .filter(patient => patient.bloodPressure > 140&&
-        patient.respiratoryRate > 30 && patient.bloodOxygenLevel > 90 && patient.heartbeatRate > 100);
+  //     const criticalPatients = await ClinicalTest.aggregate(aggregationPipeline);
+  //     const filteredCriticalPatients = criticalPatients
+  //     .filter(patient => patient.bloodPressure > 140&&
+  //       patient.respiratoryRate > 30 && patient.bloodOxygenLevel > 90 && patient.heartbeatRate > 100);
 
-    console.log('Filtered Critical Patients:');
-    filteredCriticalPatients.forEach(patient => {
-      console.log(patient);
-    });
+  //   console.log('Filtered Critical Patients:');
+  //   filteredCriticalPatients.forEach(patient => {
+  //     console.log(patient);
+  //   });
 
-    res.status(200).json({ success: true, data: filteredCriticalPatients });
+  //   res.status(200).json({ success: true, data: filteredCriticalPatients });
     
-    } catch (error) {
-      res.status(500).json({ success: false, message: 'Error retrieving and sorting the collection.' });
-      console.error(error);
-    }
-  };
+  //   } catch (error) {
+  //     res.status(500).json({ success: false, message: 'Error retrieving and sorting the collection.' });
+  //     console.error(error);
+  //   }
+  // };
+
+
+exports.getSortedCollection = async (req, res) => {
+    const {
+      bloodPressure,
+      respiratoryRate,
+      bloodOxygenLevel,
+      heartbeatRate,
+      chiefComplaint,
+      pastMedicalHistory,
+      medicalDiagnosis,
+      medicalPrescription,
+      creationDateTime,
+      patientId, // Reference to the patient
+      status // Status of the clinical test (critical or normal)
+  } = req.body;
+
+  // Check if the required fields are not empty
+  if (
+      !bloodPressure ||
+      !respiratoryRate ||
+      !bloodOxygenLevel ||
+      !heartbeatRate ||
+      !creationDateTime ||
+      !status // Ensure status is provided
+  ) {
+      return res.status(400).json({ success: false, message: 'Please provide all required fields including status.' });
+  }
+
+  // Validate and check if they are greater than or equal to 800
+  if (
+      bloodPressure >= 800 ||
+      respiratoryRate >= 800 ||
+      bloodOxygenLevel >= 800 ||
+      heartbeatRate >= 800
+  ) {
+      return res.status(400).json({ success: false, message: 'Blood pressure value or respiratory Rate value or bloodOxygen Level value or heartbeat Rate value is not valid.' });
+  }
+
+  // Additional checks for data type validation can be added here.
+
+  try {
+      const patient = await Patient.findById(patientId);
+
+      if (!patient) {
+          return res.status(404).json({ success: false, message: 'Patient not found.' });
+      }
+      const clinicalTest = new ClinicalTest({
+          bloodPressure,
+          respiratoryRate,
+          bloodOxygenLevel,
+          heartbeatRate,
+          chiefComplaint,
+          pastMedicalHistory,
+          medicalDiagnosis,
+          medicalPrescription,
+          creationDateTime,
+          status, // Include status in the clinical test object
+          patient: {
+              _id: patientId,
+              firstName: patient.firstName,
+              lastName: patient.lastName,
+          },
+          // Assign the patient reference
+      });
+
+      await clinicalTest.save();
+
+      res.status(201).json({ success: true, message: 'Clinical test created successfully.' });
+  } catch (err) {
+      res.status(500).json({ success: false, message: 'Error creating clinical test.' });
+      console.log(err);
+  }
+};
   
