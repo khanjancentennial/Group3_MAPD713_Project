@@ -151,7 +151,7 @@ const {
 
       await clinicalTest.save();
 
-      res.status(201).json({ success: true, message: 'Clinical test created successfully.' });
+      res.status(201).json({ status: status, success: true, message: 'Clinical test created successfully.' });
   } catch (err) {
       res.status(500).json({ success: false, message: 'Error creating clinical test.' });
       console.log(err);
