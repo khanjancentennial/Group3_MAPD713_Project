@@ -16,7 +16,8 @@ exports.addPatient = async (req, res) => {
     weight,
     height,
     address,
-    gender
+    gender,
+    status: "normal"
   } = req.body;
 
   if (!firstName || !lastName || !email || !phoneNumber || !weight || !height || !address || gender === undefined ) {
@@ -34,7 +35,7 @@ exports.addPatient = async (req, res) => {
       height,
       address,
       gender,
-      status: "normal"
+      status
     });
 
     await newPatient.save();
