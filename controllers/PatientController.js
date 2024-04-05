@@ -62,20 +62,43 @@ exports.getPatientById = async (req, res) => {
 
 
 // Function to get patient details by name
-exports.getPatientByName = async (req, res) => {
-  try {
-    const patient = await Patient.find({ firstName: req.params.patientName });
+// exports.getPatientByName = async (req, res) => {
+//   try {
+//     const patient = await Patient.find({ firstName: req.params.patientName });
 
-    if (!patient || patient.length === 0) {
-      return res.status(404).json({ success: false, message: 'Patient not found.' });
+//     if (!patient || patient.length === 0) {
+//       return res.status(404).json({ success: false, message: 'Patient not found.' });
+//     }
+
+//     // Send the patient details in the response
+//     res.status(200).json({ success: true, data: patient });
+//   } catch (err) {
+//     res.status(500).json({ success: false, message: 'Error retrieving patient details.' });
+//   }
+// };
+
+// Function to get patient details by name and status
+exports.getPatientByNameAndStatus = async (req, res) => {
+  try {
+    let query = { firstName: req.params.patientName };
+
+    if (req.query.status) {
+      query.status = req.query.status;
+    }
+
+    const patients = await Patient.find(query);
+
+    if (!patients || patients.length === 0) {
+      return res.status(404).json({ success: false, message: 'No patients found.' });
     }
 
     // Send the patient details in the response
-    res.status(200).json({ success: true, data: patient });
+    res.status(200).json({ success: true, data: patients });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Error retrieving patient details.' });
   }
 };
+
 
 // Function to get patient details by email
 exports.getPatientByEmail = async (req, res) => {
