@@ -11,6 +11,7 @@ const clinicalTestSchema = new Schema({
   medicalDiagnosis: String,
   medicalPrescription: String,
   creationDateTime: Date,
+  status: String,
   patient: {
     _id: {
       type: Schema.Types.ObjectId,
