@@ -272,8 +272,7 @@ exports.getSortedCollection = async (req, res) => {
       medicalDiagnosis,
       medicalPrescription,
       creationDateTime,
-      patientId, // Reference to the patient
-      status // Status of the clinical test (critical or normal)
+      patientId // Reference to the patient
   } = req.body;
 
   // Check if the required fields are not empty
@@ -282,10 +281,9 @@ exports.getSortedCollection = async (req, res) => {
       !respiratoryRate ||
       !bloodOxygenLevel ||
       !heartbeatRate ||
-      !creationDateTime ||
-      !status // Ensure status is provided
+      !creationDateTime
   ) {
-      return res.status(400).json({ success: false, message: 'Please provide all required fields including status.' });
+      return res.status(400).json({ success: false, message: 'Please provide all required fields.' });
   }
 
   // Validate and check if they are greater than or equal to 800
@@ -298,7 +296,16 @@ exports.getSortedCollection = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Blood pressure value or respiratory Rate value or bloodOxygen Level value or heartbeat Rate value is not valid.' });
   }
 
-  // Additional checks for data type validation can be added here.
+  // Determine status based on provided values
+  let status = 'normal';
+  if (
+      bloodPressure > 140 ||
+      respiratoryRate > 30 ||
+      bloodOxygenLevel < 90 ||
+      heartbeatRate > 100
+  ) {
+      status = 'critical';
+  }
 
   try {
       const patient = await Patient.findById(patientId);
@@ -316,7 +323,7 @@ exports.getSortedCollection = async (req, res) => {
           medicalDiagnosis,
           medicalPrescription,
           creationDateTime,
-          status, // Include status in the clinical test object
+          status, // Automatically determined status
           patient: {
               _id: patientId,
               firstName: patient.firstName,
@@ -332,5 +339,5 @@ exports.getSortedCollection = async (req, res) => {
       res.status(500).json({ success: false, message: 'Error creating clinical test.' });
       console.log(err);
   }
-};
+}
   
