@@ -8,7 +8,10 @@ router.post('/add', PatientController.addPatient);
 // Get patient details by id
 router.get('/view/:patientId', PatientController.getPatientById);
 // Get patient details by name
-router.get('/viewByName/:patientName', PatientController.getPatientByName);
+// router.get('/viewByName/:patientName', PatientController.getPatientByName);
+
+router.get('/viewByName/:patientName', PatientController.getPatientByNameAndStatus);
+
 // Get patient details by email
 router.get('/viewByEmail/:patientEmail', PatientController.getPatientByEmail);
 // Get a list of all patients
