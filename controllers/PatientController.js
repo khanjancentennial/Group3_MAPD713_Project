@@ -33,7 +33,8 @@ exports.addPatient = async (req, res) => {
       weight,
       height,
       address,
-      gender
+      gender,
+      status: "normal"
     });
 
     await newPatient.save();
