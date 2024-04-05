@@ -80,10 +80,13 @@ exports.getPatientById = async (req, res) => {
 // Function to get patient details by name and status
 exports.getPatientByNameAndStatus = async (req, res) => {
   try {
-    let query = { firstName: req.params.patientName };
+    let query = {};
 
-    if (req.query.status) {
-      query.status = req.query.status;
+    // Check if the patientName is "critical"
+    if (req.params.patientName.toLowerCase() === 'critical') {
+      query.status = 'critical';
+    } else {
+      query.firstName = req.params.patientName;
     }
 
     const patients = await Patient.find(query);
