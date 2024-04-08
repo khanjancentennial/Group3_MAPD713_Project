@@ -286,6 +286,16 @@ exports.updateClinicalTest = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Please provide all required fields.' });
     }
 
+      // Calculate status based on updated values
+    let status = 'normal';
+    if (
+      clinicalTest.bloodPressure > 140 ||
+      clinicalTest.respiratoryRate > 30 ||
+      clinicalTest.bloodOxygenLevel < 90 ||
+      clinicalTest.heartbeatRate > 100
+    ) {
+      status = 'critical';
+    }
     // Additional checks for data type validation can be added here.
 
     // Update clinical test properties
@@ -298,17 +308,9 @@ exports.updateClinicalTest = async (req, res) => {
     clinicalTest.medicalDiagnosis = req.body.medicalDiagnosis;
     clinicalTest.medicalPrescription = req.body.medicalPrescription;
     clinicalTest.creationDateTime = req.body.creationDateTime;
+    clinicalTest.status = status;
 
-    // Calculate status based on updated values
-    let status = 'normal';
-    if (
-      clinicalTest.bloodPressure > 140 ||
-      clinicalTest.respiratoryRate > 30 ||
-      clinicalTest.bloodOxygenLevel < 90 ||
-      clinicalTest.heartbeatRate > 100
-    ) {
-      status = 'critical';
-    }
+    
 
     // Update clinical test document
     await clinicalTest.save();
