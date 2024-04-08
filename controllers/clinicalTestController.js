@@ -289,10 +289,10 @@ exports.updateClinicalTest = async (req, res) => {
       // Calculate status based on updated values
     let status = 'normal';
     if (
-      clinicalTest.bloodPressure > 140 ||
-      clinicalTest.respiratoryRate > 30 ||
-      clinicalTest.bloodOxygenLevel < 90 ||
-      clinicalTest.heartbeatRate > 100
+      req.body.bloodPressure > 140 ||
+      req.body.respiratoryRate > 30 ||
+      req.body.bloodOxygenLevel < 90 ||
+      req.body.heartbeatRate > 100
     ) {
       status = 'critical';
     }
