@@ -204,65 +204,132 @@ exports.getClinicalTestById = async (req, res) => {
 
 
 // Update a clinical test record
-exports.updateClinicalTest = async (req, res) => {
-  // Check the Content-Type header
-//  if (req.get('Content-Type') !== 'application/json') {
-//    return res.status(400).json({ success: false, message: 'Content-Type header must be application/json.' });
-//  }
- try {
-   const testId = req.params.testId;
+// exports.updateClinicalTest = async (req, res) => {
+//   // Check the Content-Type header
+// //  if (req.get('Content-Type') !== 'application/json') {
+// //    return res.status(400).json({ success: false, message: 'Content-Type header must be application/json.' });
+// //  }
+//  try {
+//    const testId = req.params.testId;
 
-   // Find the clinical test record by ID
-   const clinicalTest = await ClinicalTest.findById(testId);
+//    // Find the clinical test record by ID
+//    const clinicalTest = await ClinicalTest.findById(testId);
 
-   if (!clinicalTest) {
-     return res.status(404).json({ success: false, message: 'Clinical test not found.' });
-   }
+//    if (!clinicalTest) {
+//      return res.status(404).json({ success: false, message: 'Clinical test not found.' });
+//    }
 
-   // Check if the required fields are not empty
-   if (
-     !req.body.bloodPressure ||
-     !req.body.respiratoryRate ||
-     !req.body.bloodOxygenLevel ||
-     !req.body.heartbeatRate ||
-     !req.body.creationDateTime
-   ) {
-     return res.status(400).json({ success: false, message: 'Please provide all required fields.' });
-   }
+//    // Check if the required fields are not empty
+//    if (
+//      !req.body.bloodPressure ||
+//      !req.body.respiratoryRate ||
+//      !req.body.bloodOxygenLevel ||
+//      !req.body.heartbeatRate ||
+//      !req.body.creationDateTime
+//    ) {
+//      return res.status(400).json({ success: false, message: 'Please provide all required fields.' });
+//    }
 
-   // Additional checks for data type validation can be added here.
+//    // Additional checks for data type validation can be added here.
 
-   // Update clinical test properties
-   clinicalTest.bloodPressure = req.body.bloodPressure;
-   clinicalTest.respiratoryRate = req.body.respiratoryRate;
-   clinicalTest.bloodOxygenLevel = req.body.bloodOxygenLevel;
-   clinicalTest.heartbeatRate = req.body.heartbeatRate;
-   clinicalTest.chiefComplaint = req.body.chiefComplaint;
-   clinicalTest.pastMedicalHistory = req.body.pastMedicalHistory;
-   clinicalTest.medicalDiagnosis = req.body.medicalDiagnosis;
-   clinicalTest.medicalPrescription = req.body.medicalPrescription;
-   clinicalTest.creationDateTime = req.body.creationDateTime;
-   // If you want to update the patient reference, you can do that here as well.
-     let status = 'normal';
-  if (
-    bloodPressure > 140 ||
-    respiratoryRate > 30 ||
-    bloodOxygenLevel < 90 ||
-    heartbeatRate > 100
-  ) {
-    status = 'critical';
-  }
-     const patient = await Patient.findByIdAndUpdate(patientId, { status }, { new: true });
+//    // Update clinical test properties
+//    clinicalTest.bloodPressure = req.body.bloodPressure;
+//    clinicalTest.respiratoryRate = req.body.respiratoryRate;
+//    clinicalTest.bloodOxygenLevel = req.body.bloodOxygenLevel;
+//    clinicalTest.heartbeatRate = req.body.heartbeatRate;
+//    clinicalTest.chiefComplaint = req.body.chiefComplaint;
+//    clinicalTest.pastMedicalHistory = req.body.pastMedicalHistory;
+//    clinicalTest.medicalDiagnosis = req.body.medicalDiagnosis;
+//    clinicalTest.medicalPrescription = req.body.medicalPrescription;
+//    clinicalTest.creationDateTime = req.body.creationDateTime;
+//    // If you want to update the patient reference, you can do that here as well.
+//      let status = 'normal';
+//   if (
+//     bloodPressure > 140 ||
+//     respiratoryRate > 30 ||
+//     bloodOxygenLevel < 90 ||
+//     heartbeatRate > 100
+//   ) {
+//     status = 'critical';
+//   }
+//      const patient = await Patient.findByIdAndUpdate(patientId, { status }, { new: true });
 
-   await clinicalTest.save();
+//    await clinicalTest.save();
 
      
 
-   res.status(200).json({ success: true, message: 'Clinical test updated successfully.' });
- } catch (err) {
-   res.status(500).json({ success: false, message: 'Error updating clinical test.' });
- }
- }
+//    res.status(200).json({ success: true, message: 'Clinical test updated successfully.' });
+//  } catch (err) {
+//    res.status(500).json({ success: false, message: 'Error updating clinical test.' });
+//  }
+//  }
+
+exports.updateClinicalTest = async (req, res) => {
+  try {
+    const testId = req.params.testId;
+
+    // Find the clinical test record by ID
+    const clinicalTest = await ClinicalTest.findById(testId);
+
+    if (!clinicalTest) {
+      return res.status(404).json({ success: false, message: 'Clinical test not found.' });
+    }
+
+    // Check if the required fields are not empty
+    if (
+      !req.body.bloodPressure ||
+      !req.body.respiratoryRate ||
+      !req.body.bloodOxygenLevel ||
+      !req.body.heartbeatRate ||
+      !req.body.creationDateTime
+    ) {
+      return res.status(400).json({ success: false, message: 'Please provide all required fields.' });
+    }
+
+    // Additional checks for data type validation can be added here.
+
+    // Update clinical test properties
+    clinicalTest.bloodPressure = req.body.bloodPressure;
+    clinicalTest.respiratoryRate = req.body.respiratoryRate;
+    clinicalTest.bloodOxygenLevel = req.body.bloodOxygenLevel;
+    clinicalTest.heartbeatRate = req.body.heartbeatRate;
+    clinicalTest.chiefComplaint = req.body.chiefComplaint;
+    clinicalTest.pastMedicalHistory = req.body.pastMedicalHistory;
+    clinicalTest.medicalDiagnosis = req.body.medicalDiagnosis;
+    clinicalTest.medicalPrescription = req.body.medicalPrescription;
+    clinicalTest.creationDateTime = req.body.creationDateTime;
+
+    // Calculate status based on updated values
+    let status = 'normal';
+    if (
+      clinicalTest.bloodPressure > 140 ||
+      clinicalTest.respiratoryRate > 30 ||
+      clinicalTest.bloodOxygenLevel < 90 ||
+      clinicalTest.heartbeatRate > 100
+    ) {
+      status = 'critical';
+    }
+
+    // Update clinical test document
+    await clinicalTest.save();
+
+    // Update patient's status in the Patients collection
+    const patient = await Patient.findByIdAndUpdate(
+      clinicalTest.patient._id,
+      { status },
+      { new: true }
+    );
+
+    if (!patient) {
+      return res.status(404).json({ success: false, message: 'Patient not found.' });
+    }
+
+    res.status(200).json({ success: true, message: 'Clinical test updated successfully.' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Error updating clinical test.' });
+  }
+}
+
 
   // Delete a clinical test record
   exports.deleteClinicalTest = async (req, res) => {
