@@ -118,7 +118,7 @@ exports.createClinicalTest = async (req, res) => {
   if (
     bloodPressure > 140 ||
     respiratoryRate > 30 ||
-    bloodOxygenLevel < 90 ||
+    bloodOxygenLevel > 90 ||
     heartbeatRate > 100
   ) {
     status = 'critical';
@@ -291,10 +291,12 @@ exports.updateClinicalTest = async (req, res) => {
     if (
       req.body.bloodPressure > 140 ||
       req.body.respiratoryRate > 30 ||
-      req.body.bloodOxygenLevel < 90 ||
+      req.body.bloodOxygenLevel > 90 ||
       req.body.heartbeatRate > 100
     ) {
       status = 'critical';
+    }else{
+        status = 'normal';
     }
     // Additional checks for data type validation can be added here.
 
