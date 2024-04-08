@@ -335,23 +335,77 @@ exports.updateClinicalTest = async (req, res) => {
 }
 
 
-  // Delete a clinical test record
-  exports.deleteClinicalTest = async (req, res) => {
-    try {
-        const testId = req.params.testId;
+  // // Delete a clinical test record
+  // exports.deleteClinicalTest = async (req, res) => {
+  //   try {
+  //       const testId = req.params.testId;
     
-        // Use deleteOne to remove the clinical test record by ID
-        const result = await ClinicalTest.deleteOne({ _id: testId });
+  //       // Use deleteOne to remove the clinical test record by ID
+  //       const result = await ClinicalTest.deleteOne({ _id: testId });
     
-        if (result.deletedCount === 0) {
-          return res.status(404).json({ success: false, message: 'Clinical test not found.' });
-        }
+  //       if (result.deletedCount === 0) {
+  //         return res.status(404).json({ success: false, message: 'Clinical test not found.' });
+  //       }
     
-        res.status(200).json({ success: true, message: 'Clinical test deleted successfully.' });
-      } catch (err) {
-        res.status(500).json({ success: false, message: 'Error deleting clinical test.' });
+  //       res.status(200).json({ success: true, message: 'Clinical test deleted successfully.' });
+  //     } catch (err) {
+  //       res.status(500).json({ success: false, message: 'Error deleting clinical test.' });
+  //     }
+  // }
+
+exports.deleteClinicalTest = async (req, res) => {
+  try {
+    const testId = req.params.testId;
+
+    // Find the clinical test to be deleted
+    const deletedTest = await ClinicalTest.findById(testId);
+
+    if (!deletedTest) {
+      return res.status(404).json({ success: false, message: 'Clinical test not found.' });
+    }
+
+    // Use deleteOne to remove the clinical test record by ID
+    const result = await ClinicalTest.deleteOne({ _id: testId });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ success: false, message: 'Clinical test not found.' });
+    }
+
+    // Find the latest test for the associated patient
+    const latestTest = await ClinicalTest.findOne({ 'patient._id': deletedTest.patient._id })
+      .sort({ creationDateTime: -1 }) // Sort by creationDateTime in descending order to get the latest test
+      .limit(1);
+
+    let status = 'normal';
+    if (latestTest) {
+      // Determine status based on the latest test's values
+      if (
+        latestTest.bloodPressure > 140 ||
+        latestTest.respiratoryRate > 30 ||
+        latestTest.bloodOxygenLevel > 90 ||
+        latestTest.heartbeatRate > 100
+      ) {
+        status = 'critical';
       }
+    }
+
+    // Update patient's status in the Patients collection
+    const patient = await Patient.findByIdAndUpdate(
+      deletedTest.patient._id,
+      { status },
+      { new: true }
+    );
+
+    if (!patient) {
+      return res.status(404).json({ success: false, message: 'Patient not found.' });
+    }
+
+    res.status(200).json({ success: true, message: 'Clinical test deleted successfully.' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Error deleting clinical test.' });
   }
+}
+
   
 
 
