@@ -243,8 +243,20 @@ exports.updateClinicalTest = async (req, res) => {
    clinicalTest.medicalPrescription = req.body.medicalPrescription;
    clinicalTest.creationDateTime = req.body.creationDateTime;
    // If you want to update the patient reference, you can do that here as well.
+     let status = 'normal';
+  if (
+    bloodPressure > 140 ||
+    respiratoryRate > 30 ||
+    bloodOxygenLevel < 90 ||
+    heartbeatRate > 100
+  ) {
+    status = 'critical';
+  }
+     const patient = await Patient.findByIdAndUpdate(patientId, { status }, { new: true });
 
    await clinicalTest.save();
+
+     
 
    res.status(200).json({ success: true, message: 'Clinical test updated successfully.' });
  } catch (err) {
