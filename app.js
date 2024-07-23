@@ -8,6 +8,8 @@ const passport = require('passport');
 const config = require('./config/db');
 const secret = require('./config/secret');
 
+const cors = require('cors');
+
 const app = express();
 const server = http.createServer(app);
 
@@ -17,6 +19,12 @@ app.use(session({ secret: secret.secret, resave: true, saveUninitialized: true }
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(cors({
+  origin: 'https://healthcarereactapp1.onrender.com', // Allow only your frontend domain
+  methods: 'GET,POST,PUT,DELETE',
+  allowedHeaders: 'Content-Type,Authorization'
+}));
 
 // Connect to MongoDB
 mongoose.connect(config.URI, {
@@ -53,5 +61,6 @@ const host = 'group3-mapd713.onrender.com';
 const serverInstance = server.listen(port, () => {
   console.log(`Server is running on http://${host}`);
 });
+
 
 module.exports = app;  // Export the Express app
