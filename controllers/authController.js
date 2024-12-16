@@ -3,7 +3,7 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const config = require('../config/db');
 const secret = require('../config/secret')
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 // create token after login
 
